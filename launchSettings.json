@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "serviceActions": {
+        "adminservices": "StartWithoutDebugging",
+        "apigateway": "StartWithoutDebugging",
+        "eureka": "StartWithoutDebugging",
+        "jaeger-agent": "StartWithoutDebugging",
+        "notificationservices": "StartDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "serviceprovider": "StartWithoutDebugging",
+        "servicerequest": "StartWithoutDebugging",
+        "servicescatlog": "StartWithoutDebugging"
+      },
+      "commandVersion": "1.0"
+    }
+  }
+}

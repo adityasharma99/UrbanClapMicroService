@@ -1,0 +1,222 @@
+name: dockercompose14917205816115983826
+services:
+  adminservices:
+    build:
+      context: C:\Users\adityasharma02\Desktop\Microservices
+      dockerfile: AdminServices/Dockerfile
+    container_name: adminservice
+    depends_on:
+      eureka:
+        condition: service_started
+      jaeger-agent:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JAEGER_AGENT_HOST: jaeger-agent
+      JAEGER_AGENT_PORT: "6831"
+      JAEGER_SAMPLER_PARAM: "1"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SERVICE_NAME: AdminServiceAPI
+    image: adityasharma99/adminservices
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+  apigateway:
+    build:
+      context: C:\Users\adityasharma02\Desktop\Microservices
+      dockerfile: APIGateway/Dockerfile
+    container_name: Gateway
+    depends_on:
+      eureka:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: adityasharma99/apigateway
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+    - mode: ingress
+      host_ip: 0.0.0.0
+      target: 80
+      published: "9000"
+      protocol: tcp
+  eureka:
+    container_name: eurekaServiceProvider
+    image: steeltoeoss/eurekaserver
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 8761
+      published: "8761"
+      protocol: tcp
+  jaeger-agent:
+    container_name: tracing.jaeger.agent
+    environment:
+      LOG_LEVEL: debug
+    image: jaegertracing/all-in-one:latest
+    labels:
+      NAME: jaeger-agent
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 5775
+      published: "5775"
+      protocol: udp
+    - mode: ingress
+      target: 6831
+      published: "6831"
+      protocol: udp
+    - mode: ingress
+      target: 6832
+      published: "6832"
+      protocol: udp
+    - mode: ingress
+      target: 5778
+      published: "5778"
+      protocol: tcp
+    - mode: ingress
+      target: 16686
+      published: "16686"
+      protocol: tcp
+    - mode: ingress
+      target: 14268
+      published: "14268"
+      protocol: tcp
+    - mode: ingress
+      target: 9411
+      published: "9411"
+      protocol: tcp
+  notificationservices:
+    build:
+      context: C:\Users\adityasharma02\Desktop\Microservices
+      dockerfile: NotificationServices/Dockerfile
+    container_name: notificationlogs
+    depends_on:
+      eureka:
+        condition: service_started
+      jaeger-agent:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JAEGER_AGENT_HOST: jaeger-agent
+      JAEGER_AGENT_PORT: "6831"
+      JAEGER_SAMPLER_PARAM: "1"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SERVICE_NAME: NotificationServiceAPI
+    image: adityasharma99/notificationservices
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: my-rabbit
+    image: rabbitmq:3-management
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 15672
+      published: "15672"
+      protocol: tcp
+    - mode: ingress
+      target: 5672
+      published: "5672"
+      protocol: tcp
+  serviceprovider:
+    build:
+      context: C:\Users\adityasharma02\Desktop\Microservices
+      dockerfile: ServiceProvider/Dockerfile
+    container_name: serviceprovider
+    depends_on:
+      eureka:
+        condition: service_started
+      jaeger-agent:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JAEGER_AGENT_HOST: jaeger-agent
+      JAEGER_AGENT_PORT: "6831"
+      JAEGER_SAMPLER_PARAM: "1"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SERVICE_NAME: ServiceProviderAPI
+    image: adityasharma99/serviceprovider
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+  servicerequest:
+    build:
+      context: C:\Users\adityasharma02\Desktop\Microservices
+      dockerfile: ServiceRequest/Dockerfile
+    container_name: servicerequest
+    depends_on:
+      eureka:
+        condition: service_started
+      jaeger-agent:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JAEGER_AGENT_HOST: jaeger-agent
+      JAEGER_AGENT_PORT: "6831"
+      JAEGER_SAMPLER_PARAM: "1"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SERVICE_NAME: ServiceRequestAPI
+    image: adityasharma99/servicerequest
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+  servicescatlog:
+    build:
+      context: C:\Users\adityasharma02\Desktop\Microservices
+      dockerfile: ServicesCatlog/Dockerfile
+    container_name: servicescatlog
+    depends_on:
+      eureka:
+        condition: service_started
+      jaeger-agent:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      JAEGER_AGENT_HOST: jaeger-agent
+      JAEGER_AGENT_PORT: "6831"
+      JAEGER_SAMPLER_PARAM: "1"
+      JAEGER_SAMPLER_TYPE: const
+      JAEGER_SERVICE_NAME: ServiceCatlogAPI
+    image: adityasharma99/servicescatlog
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      protocol: tcp
+networks:
+  default:
+    name: dockercompose14917205816115983826_default
